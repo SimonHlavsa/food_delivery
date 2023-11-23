@@ -15,16 +15,31 @@
 </head>
 <body>
 
-    <nav class="navbar bg-body-tertiary">
+    <nav class="navbar bg-body-tertiary fixed-top">
         <div class="container-fluid">
+            
             <a href="/" class="navbar-brand">Food Delivery</a>
+
+            {% if user.is_authenticated %}
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{user.username}}</a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li><a class="dropdown-item" href="#">Orders</a></li>
+                  <li><a class="dropdown-item" href="/logout_user">Logout</a></li>
+                </ul>
+            </div>
+            {% else  %}
             <div class="d-flex">
                 <a href="/login" class="btn btn-outline-success me-2" role="button">Login</a>
-                <a href="/register" class="btn btn-outline-secondary" role="button">Register</a>
+                <a href="/register" class="btn btn-outline-success" role="button">Register</a>
             </div>
+            {% endif %}  
+
         </div>
     </nav>
-
+    <div class="pt-5"></div>
+    
     {% block content %}
     {% endblock content %}
     
