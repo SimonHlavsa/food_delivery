@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import UserProfile, Food
+from .models import UserProfile, Food, Order
+from .forms import OrderForm
 
 # Register your models here.
 
@@ -60,3 +61,7 @@ class CusetomUserAdmin(UserAdmin):
 
 admin.site.register(UserProfile, CusetomUserAdmin)
 admin.site.register(Food)
+
+class OrderAdmin(admin.ModelAdmin):
+    form = OrderForm
+admin.site.register(Order, OrderAdmin)
