@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import UserProfile, Food, Order
-from .forms import OrderForm
+from .models import UserProfile
+from order.models import Food
+from .forms import UserProfileForm
 
 # Register your models here.
 
@@ -10,7 +10,10 @@ class FoodInline(admin.StackedInline):
     model = Food
     extra = 0
 
-class CusetomUserAdmin(UserAdmin):
+
+
+class UserProfileAdmin(UserAdmin):
+    add_form = UserProfileForm
     fieldsets = (
         
         (
@@ -33,35 +36,29 @@ class CusetomUserAdmin(UserAdmin):
                 ),
             },
         ),
-    
-        (
-            "Permissions", 
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                ),
-            }
-        ),
-        (
-            "Important dates", 
-            {
-                "fields": (
-                    "last_login",
-                    "date_joined",
-                ),
-            }
-        ),
     )
     inlines = [FoodInline]  
 
+admin.site.register(UserProfile, UserProfileAdmin)
 
-admin.site.register(UserProfile, CusetomUserAdmin)
-admin.site.register(Food)
-
-class OrderAdmin(admin.ModelAdmin):
-    form = OrderForm
-admin.site.register(Order, OrderAdmin)
+        # (
+        #     "Permissions", 
+        #     {
+        #         "fields": (
+        #             "is_active",
+        #             "is_staff",
+        #             "is_superuser",
+        #             "groups",
+        #             "user_permissions",
+        #         ),
+        #     }
+        # ),
+        # (
+        #     "Important dates", 
+        #     {
+        #         "fields": (
+        #             "last_login",
+        #             "date_joined",
+        #         ),
+        #     }
+        # ),
