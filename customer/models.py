@@ -1,7 +1,6 @@
+from django.utils import timezone
 from django.db import models
-from django.contrib.auth.models import AbstractUser, UserManager
-from django.forms import ValidationError
-
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 class CustomerManager(models.Manager):
     def get_queryset(self):
@@ -11,7 +10,24 @@ class RestaurantManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(user_type="restaurant")
 
-class UserProfile(AbstractUser):
+class UserProfileManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email musí být vyplněn')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        user = self.create_user(email, password=password, **extra_fields)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     USER_CHOICES = (
         ('customer', 'Customer'),
@@ -19,28 +35,34 @@ class UserProfile(AbstractUser):
     )
     user_type = models.CharField(max_length=20, choices=USER_CHOICES)
 
-    objects = UserManager()
+    email = models.EmailField(unique=True)
+    restaurant_name = models.CharField(max_length=150, blank=True, null=True)
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)    
+
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+
+    date_joined = models.DateTimeField(default=timezone.now)
+    last_login = models.DateTimeField(blank=True, null=True)
+
+    objects = UserProfileManager()
     customer = CustomerManager()
     restaurant = RestaurantManager()
 
-    def __str__(self):
-        return self.username
+    USERNAME_FIELD = 'email'
+    EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
-
-    # def create_order(self, customer, restaurant, food_items):
-    #     self.validate_customer_restaurant_types(customer, restaurant)
-
-    #     order = self.active.create(customer=customer, restaurant=restaurant)
-    #     order.food.add(*food_items)
-    #     return order
+    # REQUIRED_FIELDS = ['first_name', 'last_name']
     
+    def __str__(self):
+        if self.user_type == "restaurant":
+            return self.restaurant_name
+        else:
+            return self.email
 
-# customer_user_profile = UserProfile.objects.get(pk=1)  # Získání instance uživatelského profilu typu 'customer'
-# restaurant_user_profile = UserProfile.objects.get(pk=2)  # Získání instance uživatelského profilu typu 'restaurant'
-# selected_food_items = Food.objects.filter(restaurant=restaurant_user_profile)[:3]  # Vybrání jídel od daného restauračního profilu
 
-# try:
-#     new_order = Order().create_order(customer_user_profile, restaurant_user_profile, selected_food_items)
-#     print("Objednávka byla úspěšně vytvořena!")
-# except ValidationError as e:
-#     print(f"Chyba při vytváření objednávky: {e}")
+
+
