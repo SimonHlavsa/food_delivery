@@ -29,12 +29,25 @@ def restaurant_menu(response, pk):
 
 
 def all_orders(response):
-    if response.method == "POST":
-        order_id = response.POST.get("cancel_order")
-        order = Order.objects.get(id = order_id)
-        order.status = "canceled"
-        order.save()
+    if response.method == "POST":   
+        order_id_cancel = response.POST.get("cancel_order")
+        order_id_complete = response.POST.get("complete_order")
 
-    customer = UserProfile.objects.get(id = response.user.id)    
-    all_orders = Order.objects.filter(customer = customer)
+        if order_id_cancel:
+            order = Order.objects.get(id = order_id_cancel)
+            if order.status != "completed":
+                order.status = "canceled"
+                order.save()
+            
+        elif order_id_complete:
+            order = Order.objects.get(id = order_id_complete)
+            if order.status != "canceled":
+                order.status = "completed"
+                order.save()
+
+    user = UserProfile.objects.get(id = response.user.id)
+    if user.user_type == "customer":    
+        all_orders = Order.objects.filter(customer = user).order_by("-created_at")
+    elif user.user_type == "restaurant":
+        all_orders = Order.objects.filter(restaurant = user).order_by("-created_at")
     return render(response, "core/all_orders.html", {"all_orders": all_orders})
