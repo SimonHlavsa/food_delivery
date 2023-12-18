@@ -25,7 +25,7 @@ class OrderManager(models.Manager):
 class Order(models.Model):
     customer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='created_orders')
     restaurant = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='received_orders')
-    food = models.ManyToManyField(Food)
+    food = models.ManyToManyField(Food, blank=True)
     is_done = models.BooleanField(default=False)
     is_canceled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -47,4 +47,5 @@ class Order(models.Model):
     def clean(self):
         self.validate_customer_restaurant_types()
         return super().clean()
+
     

@@ -36,7 +36,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=20, choices=USER_CHOICES)
 
     email = models.EmailField(unique=True)
-    restaurant_name = models.CharField(max_length=150, blank=True, null=True)
+    restaurant_name = models.CharField(max_length=150, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)    
 
@@ -55,8 +55,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    # REQUIRED_FIELDS = ['first_name', 'last_name']
-    
     def __str__(self):
         if self.user_type == "restaurant":
             return self.restaurant_name

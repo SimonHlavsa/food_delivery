@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import UserProfile
 from order.models import Food
-from .forms import UserProfileCreationForm, UserProfileChangeForm
 
 class FoodInline(admin.StackedInline):
     model = Food

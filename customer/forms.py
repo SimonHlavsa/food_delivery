@@ -1,24 +1,57 @@
 from django import forms
 from .models import UserProfile
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-
         
-class UserProfileCreationForm(UserCreationForm):
+class CustomerCreationForm(forms.ModelForm):
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = UserProfile
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'user_type')
+        fields = ('email', 'first_name', 'last_name')
 
-class UserProfileChangeForm(UserChangeForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput, required=False)
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+
+        if not password1 or  not password2 or password1 != password2:
+            raise forms.ValidationError("Passwords do not match. Please enter matching passwords.")
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            password = self.cleaned_data.get('password1')
+            user.set_password(password) 
+            user.save()
+        return user
+
+
+class RestaurantCreationForm(forms.ModelForm):
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = UserProfile
-        fields = ('email', 'first_name', 'last_name') # Nebo explicitně uveďte pole, která chcete změnit
+        fields = ('email', 'restaurant_name')
 
-    def clean_password(self):
-        password = self.cleaned_data.get("password")
-        if password:
-            return password
-        else:
-            return self.initial["password"]
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords do not match. Please enter matching passwords.")
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            password = self.cleaned_data.get('password1')
+            user.set_password(password)  
+            user.save()
+        return user
+        
+

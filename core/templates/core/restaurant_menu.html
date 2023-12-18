@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+    <div class="container-fluid mt-5">
+        <h1 class="d-flex justify-content-center capitalize-first">{{restaurant.restaurant_name}}</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% for food in all_food %}
+                <div class="row justify-content-center mt-4">
+
+                    <div class="col-1 d-flex justify-content-end align-items-center">
+                        <input type="hidden" name="restaurant" value="{{restaurant.id}}">
+                        <input type="hidden" name="customer" value="{{customer.id}}">
+                        <input class="form-check-input " type="checkbox" id="food_{{food.id}}" name="selected_food" value="{{food.id}}">
+                    </div>
+
+                    <div class="col-4 m-2 p-0">
+                        <div>
+                            <label for="food_{{food.id}}"><h3 class="capitalize-first">{{food.name}}</h3></label> 
+                        </div>
+
+                        <div class="p-2 border rounded-2">
+                            <p>{{food.description}}</p>
+                            <p class="m-0">{{food.price}} Kč</p>
+    
+                        </div>
+                    </div>
+                    
+                </div>
+            {% endfor %}
+            <div class="row justify-content-center mt-4">
+                <div class="col-5 d-flex justify-content-end">
+                    <button class="d-flex btn btn-warning  btn-lg" type="submit">Order</button>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+
+{% endblock content %}

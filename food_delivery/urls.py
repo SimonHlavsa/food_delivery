@@ -24,7 +24,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),
     path('logout_user/', v.logout_user, name="logout_user"),
-    path('register/', v.register, name="register"),
+    # path('register/', v.register, name="register"),
+    path('register_customer/', v.register_customer, name="register_customer"),
+    path('register_restaurant/', v.register_restaurant, name="register_restaurant"),
     path('', include('django.contrib.auth.urls')),
     path('__debug__/', include(debug_toolbar.urls))
 ]

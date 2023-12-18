@@ -20,26 +20,42 @@
             
             <a href="/" class="navbar-brand">Food Delivery</a>
 
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and user.user_type == 'customer' %}
             <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{user.username}}</a>
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{user.first_name|add:" "}}{{user.last_name}}</a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" href="#">Profile</a></li>
                   <li><a class="dropdown-item" href="#">Orders</a></li>
                   <li><a class="dropdown-item" href="/logout_user">Logout</a></li>
                 </ul>
             </div>
+
+            {% elif user.is_authenticated and user.user_type == 'restaurant' %}
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{user.restaurant_name}}</a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li><a class="dropdown-item" href="#">Orders</a></li>
+                  <li><a class="dropdown-item" href="#">Food</a></li>
+                  <li><a class="dropdown-item" href="/logout_user">Logout</a></li>
+                </ul>
+            </div>
             {% else  %}
             <div class="d-flex">
                 <a href="/login" class="btn btn-outline-success me-2" role="button">Login</a>
-                <a href="/register" class="btn btn-outline-success" role="button">Register</a>
+                <div class="nav-item dropdown me-2 btn btn-outline-success">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Register</a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" href="/register_customer">Register as Customer</a></li>
+                      <li><a class="dropdown-item" href="/register_restaurant">Register as Restaurant</a></li>
+                    </ul>
+                </div>
             </div>
             {% endif %}  
 
         </div>
     </nav>
     <div class="pt-5"></div>
-    
     {% block content %}
     {% endblock content %}
     
