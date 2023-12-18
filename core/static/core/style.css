@@ -2,3 +2,6 @@
     text-transform: capitalize !important;
 }
 
+body {
+    background-color: blue;
+}

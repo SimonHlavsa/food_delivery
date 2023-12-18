@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid mt-5">
+    <h1 class="d-flex justify-content-center capitalize-first my-4">Orders</h1>
+    
+    {% for order in all_orders %}
+        <div class="row justify-content-center">
+            <div class="col-6 p-3 m-3 border border-2 border-info rounded-2 position-relative">
+                <p class="capitalize-first">Order number: {{order.id}}</p>
+                <p class="capitalize-first">{{order.restaurant.restaurant_name}}</p>
+                <p class="capitalize-first">Status: {{order.get_status_display}}</p>
+                <p class="capitalize-first">Ordered food:</p>
+
+                <ul class="ms-3">
+                    {% for food in order.food.all %}
+                        <li>{{food.name}} - {{food.price}} Kč</li>
+                    {% endfor %}
+                </ul>
+
+                <p class="capitalize-first">Total price: {{order.total_price}} Kč</p>
+
+                <div class="position-absolute top-0 end-0 m-3">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="cancel_order" value="{{order.id}}">
+                        <button type="submit" class="btn btn-danger">Cancel Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

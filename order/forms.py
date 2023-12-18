@@ -6,7 +6,7 @@ from django.forms import ValidationError
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['customer', 'restaurant', 'food', 'is_done', 'is_canceled']
+        fields = ['customer', 'restaurant', 'food', 'status']
 
     def clean(self):
         all_food = self.cleaned_data.get('food')
