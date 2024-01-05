@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container-fluid mt-5 row justify-content-center">
+    <h1 class="d-flex justify-content-center capitalize-first my-2">Manage Food</h1>
+    
+    <div class="col-6 my-5">
+        {% if error %}
+            <div class="alert alert-danger">
+                <strong>Error: {{error}}</strong>
+            </div>
+        {% endif %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <input type="hidden" name="restaurant" value="{{user.id}}">
+            <button type="submit" class="btn btn-success">Save</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid mt-5 row justify-content-center">
+    <h1 class="d-flex justify-content-center capitalize-first my-4">{{user.restaurant_name}}</h1>
+    
+    {% for food in all_food %}
+        <div class="row justify-content-center">
+            <div class="col-6 p-3 m-3 border border-2 border-info rounded-2 ">
+                <a href="{% url 'manage_food_detail' food.id %}" class="text-decoration-none text-white d-flex justify-content-between">
+                    <h2 class="capitalize-first">{{food.name}}</h2>
+                    <div class="d-flex align-items-center">
+                        <form action="{% url 'remove_food' food.id %}" method="POSt">
+                            {% csrf_token %}
+                            <input type="hidden" name="remove_food" value="{{food.id}}">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </div>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+    
+    <div class="col-6 d-flex justify-content-start mt-3">
+        <a href="/add_food" class="btn btn-warning btn-lg">Add Food</a>
+    </div>
+</div>
+
+{% endblock content %}

@@ -18,6 +18,11 @@ class Food(models.Model):
             raise ValidationError("This UserProfile is not a restaurant and cannot be associated with food.")
         super().clean()
 
+    def save(self, *args, **kwargs):
+        # Před uložením provedeme kontrolu typu uživatele pomocí metody clean
+        self.clean()
+        super().save(*args, **kwargs)
+
 class OrderManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status = "in_progress")

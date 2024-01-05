@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order
+from .models import Order,Food
 from django.forms import ValidationError
 
 
@@ -16,3 +16,8 @@ class OrderForm(forms.ModelForm):
                 if food.restaurant != restaurant:
                     raise ValidationError("All foods in the order must belong to the same restaurant.")
         return self.cleaned_data
+    
+class FoodForm(forms.ModelForm):
+    class Meta:
+        model = Food
+        fields = ['name', 'description', 'price'] 
